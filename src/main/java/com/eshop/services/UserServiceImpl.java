@@ -1,10 +1,12 @@
-package com.company.eshop.services;
+package com.eshop.services;
 
-import com.company.eshop.models.User;
-import com.company.eshop.repositories.UserRepo;
+import com.eshop.models.User;
+import com.eshop.repositories.UserRepo;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +15,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepo userRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepo userRepo) {
@@ -24,9 +28,11 @@ public class UserServiceImpl implements UserService{
         return userRepo.findById(userId);
     }
 
+    @Transactional
     @Override
-    public void createUser(User user) {
-        userRepo.save(user);
+    public User createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepo.save(user);
     }
 
     @Override
@@ -35,8 +41,10 @@ public class UserServiceImpl implements UserService{
 
         if(optionalUser.isPresent()) {
             User existingUser = optionalUser.get();
-            existingUser.setUsername(user.getUsername());
+            existingUser.setFirstName(user.getFirstName());
             existingUser.setLastName(user.getLastName());
+            existingUser.setUsername(user.getUsername());
+            existingUser.setPhoneNumber(user.getPhoneNumber());
         }else {
             throw new EntityNotFoundException("User with ID " + userId + " not found");
         }
@@ -44,6 +52,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        return userRepo.findAll();
     }
 }
