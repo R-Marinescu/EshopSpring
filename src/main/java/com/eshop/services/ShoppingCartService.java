@@ -10,5 +10,5 @@ public interface ShoppingCartService {
     List<ShoppingCart> getAllShoppingCarts();
     ShoppingCart createShoppingCart(ShoppingCart shoppingCart);
     ShoppingCart updateShoppingCart(Integer cartId, ShoppingCart shoppingCart);
-    void deleteShoppingCart();
+    void deleteShoppingCart(Integer cartId);
 }

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
     @Autowired
@@ -28,6 +28,11 @@ public class UserServiceImpl implements UserService{
         return userRepo.findById(userId);
     }
 
+    @Override
+    public List<User> getAllUsers() {
+        return userRepo.findAll();
+    }
+
     @Transactional
     @Override
     public User createUser(User user) {
@@ -36,22 +41,43 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updateUser(Integer userId, User user) {
+    public User updateUser(Integer userId, User user) {
         Optional<User> optionalUser = getUserById(userId);
 
-        if(optionalUser.isPresent()) {
+        if (optionalUser.isPresent()) {
             User existingUser = optionalUser.get();
-            existingUser.setFirstName(user.getFirstName());
-            existingUser.setLastName(user.getLastName());
-            existingUser.setUsername(user.getUsername());
-            existingUser.setPhoneNumber(user.getPhoneNumber());
-        }else {
+
+            if (user.getFirstName() != null) {
+                existingUser.setFirstName(user.getFirstName());
+            }
+
+            if (user.getLastName() != null) {
+                existingUser.setLastName(user.getLastName());
+            }
+
+            if (user.getUsername() != null) {
+                existingUser.setUsername(user.getUsername());
+            }
+
+            if (user.getPhoneNumber() != null) {
+                existingUser.setPhoneNumber(user.getPhoneNumber());
+            }
+            userRepo.save(existingUser);
+
+            return existingUser;
+        } else {
             throw new EntityNotFoundException("User with ID " + userId + " not found");
         }
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepo.findAll();
+    public void deleteUser(Integer userId) {
+        Optional<User> optionalUser = getUserById(userId);
+
+        if (optionalUser.isPresent()) {
+            userRepo.deleteById(userId);
+        } else {
+            throw new EntityNotFoundException("User with ID " + userId + " not found");
+        }
     }
 }

@@ -11,6 +11,4 @@ public interface OrderService {
     void updateOrder(Integer orderId, Order order);
     List<Order> getAllOrders();
     void deleteOrder(Integer orderId);
-
-    void deleteOrderById(Integer orderId);
 }

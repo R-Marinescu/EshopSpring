@@ -18,7 +18,6 @@ public class MyController {
 
     @GetMapping("/user")
     public String userPage() {
-        System.out.println("oooooo");
         return "user";
     }
 

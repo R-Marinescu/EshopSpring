@@ -36,15 +36,17 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/profile").hasAnyRole("ADMIN", "USER")
-                                .requestMatchers("/admin").hasAnyRole("ADMIN")
-                                .requestMatchers("/user").hasAnyRole("USER")
-                                .requestMatchers("/home").permitAll()
+//                                .requestMatchers("/profile").hasAnyRole("ADMIN", "USER")
+//                                .requestMatchers("/admin").hasAnyRole("ADMIN")
+//                                .requestMatchers("/user").hasAnyRole("USER")
+//                                .requestMatchers("/home").permitAll()
                                 .requestMatchers("/login").permitAll()
+                                .requestMatchers("/api/products/create").permitAll()
                                 .requestMatchers("/api/users/create").permitAll()
+                                .requestMatchers("/api/products/{productId}").permitAll()
                                 .anyRequest().authenticated())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/users/create"))
+                        .ignoringRequestMatchers("/api/**"))
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

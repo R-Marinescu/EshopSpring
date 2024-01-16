@@ -25,10 +25,8 @@ public class UserController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-
     @PostMapping("/create")
     ResponseEntity<User> createUser(@RequestBody User user) {
-        System.out.println("edwwwww??");
         userService.createUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }

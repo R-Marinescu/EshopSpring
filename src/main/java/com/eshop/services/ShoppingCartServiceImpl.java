@@ -1,33 +1,67 @@
 package com.eshop.services;
 
 import com.eshop.models.ShoppingCart;
+import com.eshop.repositories.ShoppingCartRepo;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ShoppingCartServiceImpl implements ShoppingCartService{
+@Service
+public class ShoppingCartServiceImpl implements ShoppingCartService {
+
+    private final ShoppingCartRepo shoppingCartRepo;
+
+    @Autowired
+    public ShoppingCartServiceImpl(ShoppingCartRepo shoppingCartRepo) {
+        this.shoppingCartRepo = shoppingCartRepo;
+    }
+
     @Override
     public Optional<ShoppingCart> getShoppingCartById(Integer cartId) {
-        return Optional.empty();
+        return shoppingCartRepo.findById(cartId);
     }
 
     @Override
     public List<ShoppingCart> getAllShoppingCarts() {
-        return null;
+        return shoppingCartRepo.findAll();
     }
 
     @Override
     public ShoppingCart createShoppingCart(ShoppingCart shoppingCart) {
-        return null;
+        return shoppingCartRepo.save(shoppingCart);
     }
 
     @Override
     public ShoppingCart updateShoppingCart(Integer cartId, ShoppingCart shoppingCart) {
-        return null;
+        Optional<ShoppingCart> optionalShoppingCart = getShoppingCartById(cartId);
+
+        if(optionalShoppingCart.isPresent()) {
+            ShoppingCart existingShoppingCart = optionalShoppingCart.get();
+
+            if (shoppingCart.getProduct() != null) {
+                existingShoppingCart.setProduct(shoppingCart.getProduct());
+            }
+
+            if (shoppingCart.getQuantity() != null) {
+                existingShoppingCart.setQuantity(shoppingCart.getQuantity());
+            }
+            shoppingCartRepo.save(existingShoppingCart);
+
+            return existingShoppingCart;
+        } else {
+            throw new EntityNotFoundException("ShoppingCart with ID " + cartId + " not found");
+        }
     }
 
     @Override
-    public void deleteShoppingCart() {
+    public void deleteShoppingCart(Integer cartId) {
+        Optional<ShoppingCart> optionalShoppingCart = getShoppingCartById(cartId);
 
+        if(optionalShoppingCart.isPresent()){
+            shoppingCartRepo.deleteById(cartId);
+        }
     }
 }

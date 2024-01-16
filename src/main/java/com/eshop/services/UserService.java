@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface UserService {
     Optional<User> getUserById(Integer userId);
     User createUser(User user);
-    void updateUser(Integer userId, User user);
+    User updateUser(Integer userId, User user);
     List<User> getAllUsers();
+
+    void deleteUser(Integer userId);
 }
