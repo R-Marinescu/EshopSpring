@@ -1,5 +1,6 @@
 package com.eshop.services;
 
+import com.eshop.DTO.UserDTO;
 import com.eshop.models.User;
 import com.eshop.repositories.UserRepo;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,56 +25,88 @@ public class UserServiceImpl implements UserService {
         this.userRepo = userRepo;
     }
 
-    @Override
-    public Optional<User> getUserById(Integer userId) {
-        return userRepo.findById(userId);
+    public UserDTO convertUserToDTO(User user) {
+        return new UserDTO(
+                user.getUserId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getPhoneNumber());
+    }
+
+    public User convertDTOToUser(UserDTO userDTO) {
+        return new User(
+                userDTO.getFirstName(),
+                userDTO.getLastName(),
+                userDTO.getUsername(),
+                userDTO.getPassword(),
+                userDTO.getPhoneNumber()
+        );
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepo.findAll();
+    public Optional<UserDTO> getUserById(Integer userId) {
+        Optional<User> optionalUser = userRepo.findById(userId);
+
+        return optionalUser.map(this::convertUserToDTO);
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        return userRepo.findAll()
+                .stream()
+                .map(this::convertUserToDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public User createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public User createUser(UserDTO userDTO) {
+        User user = new User();
+
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+
         return userRepo.save(user);
     }
 
     @Override
-    public User updateUser(Integer userId, User user) {
-        Optional<User> optionalUser = getUserById(userId);
+    public User updateUser(Integer userId, UserDTO userDTO) {
+        Optional<User> optionalUser = userRepo.findById(userId);
+        User existingUser;
 
         if (optionalUser.isPresent()) {
-            User existingUser = optionalUser.get();
+            existingUser = optionalUser.get();
 
-            if (user.getFirstName() != null) {
-                existingUser.setFirstName(user.getFirstName());
+            if (userDTO.getFirstName() != null) {
+                existingUser.setFirstName(userDTO.getFirstName());
             }
 
-            if (user.getLastName() != null) {
-                existingUser.setLastName(user.getLastName());
+            if (userDTO.getLastName() != null) {
+                existingUser.setLastName(userDTO.getLastName());
             }
 
-            if (user.getUsername() != null) {
-                existingUser.setUsername(user.getUsername());
+            if (userDTO.getUsername() != null) {
+                existingUser.setUsername(userDTO.getUsername());
             }
 
-            if (user.getPhoneNumber() != null) {
-                existingUser.setPhoneNumber(user.getPhoneNumber());
+            if (userDTO.getPhoneNumber() != null) {
+                existingUser.setPhoneNumber(userDTO.getPhoneNumber());
             }
-            userRepo.save(existingUser);
 
-            return existingUser;
         } else {
             throw new EntityNotFoundException("User with ID " + userId + " not found");
         }
+
+        return userRepo.save(existingUser);
     }
 
     @Override
     public void deleteUser(Integer userId) {
-        Optional<User> optionalUser = getUserById(userId);
+        Optional<User> optionalUser = userRepo.findById(userId);
 
         if (optionalUser.isPresent()) {
             userRepo.deleteById(userId);

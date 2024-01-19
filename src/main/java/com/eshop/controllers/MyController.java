@@ -29,7 +29,6 @@ public class MyController {
 
     @GetMapping("/authenticated")
     public String authenticated() {
-        System.out.println("edw authenticated");
         return "authenticated";
     }
 }

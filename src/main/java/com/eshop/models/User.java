@@ -46,12 +46,11 @@ public class User {
     public User() {
     }
 
-    public User(String firstName, String lastName, String username, String password, Integer phoneNumber, Date dateCreated) {
+    public User(String firstName, String lastName, String username, String password, Integer phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.phoneNumber = phoneNumber;
-        this.dateCreated = dateCreated;
         this.password = password;
     }
 

@@ -1,36 +1,27 @@
-package com.eshop.models;
-
-import jakarta.persistence.*;
+package com.eshop.DTO;
 
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "products")
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id", nullable = false)
+public class ProductDTO {
     private Integer productId;
 
-    @Column(name = "product_name", nullable = false)
     private String productName;
 
-    @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
-    public Product() {
-    }
-
-    public Product(String productName, BigDecimal price, Integer stockQuantity) {
+    public ProductDTO(Integer productId, String productName, BigDecimal price, Integer stockQuantity) {
+        this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.stockQuantity = stockQuantity;
     }
 
-    public Integer getId() {
+    public ProductDTO() {
+    }
+
+    public Integer getProductId() {
         return productId;
     }
 
@@ -57,5 +48,4 @@ public class Product {
     public void setStockQuantity(Integer stockQuantity) {
         this.stockQuantity = stockQuantity;
     }
-
 }

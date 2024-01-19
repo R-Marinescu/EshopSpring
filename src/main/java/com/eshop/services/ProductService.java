@@ -1,14 +1,15 @@
 package com.eshop.services;
 
+import com.eshop.DTO.ProductDTO;
 import com.eshop.models.Product;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    Optional<Product> getProductById(Integer productId);
-    List<Product> getAllProducts();
-    Product createProduct(Product product);
-    void updateProduct(Integer productId, Product product);
+    ProductDTO getProductById(Integer productId);
+    List<ProductDTO> getAllProducts();
+    Product createProduct(ProductDTO productDTO);
+    void updateProduct(Integer productId, ProductDTO productDTO);
     void deleteProduct(Integer productId);
 }

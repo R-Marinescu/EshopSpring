@@ -41,9 +41,8 @@ public class SecurityConfiguration {
 //                                .requestMatchers("/user").hasAnyRole("USER")
 //                                .requestMatchers("/home").permitAll()
                                 .requestMatchers("/login").permitAll()
-                                .requestMatchers("/api/products/create").permitAll()
-                                .requestMatchers("/api/users/create").permitAll()
-                                .requestMatchers("/api/products/{productId}").permitAll()
+                                .requestMatchers("/api/products/**").permitAll()
+                                .requestMatchers("/api/users/**").permitAll()
                                 .anyRequest().authenticated())
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/api/**"))
