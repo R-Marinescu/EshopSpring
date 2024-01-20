@@ -35,4 +35,25 @@ public class ProductController {
         Product createdProduct = productService.createProduct(productDTO);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
+
+    @PostMapping("/update/{}productId")
+    public ResponseEntity<Product> updateProduct(@RequestBody ProductDTO productDTO, @PathVariable Integer productId) {
+        try {
+            Product updatedProduct = productService.updateProduct(productId, productDTO);
+            return new ResponseEntity<>(updatedProduct, HttpStatus.CREATED);
+        }catch (Exception e) {
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer productId) {
+        try {
+            productService.getProductById(productId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

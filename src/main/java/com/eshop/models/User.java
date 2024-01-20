@@ -27,7 +27,7 @@ public class User {
     private String password;
 
     @Column(name = "phone_number")
-    private Integer phoneNumber;
+    private Long phoneNumber;
 
     @Column(name = "date_created")
     private Date dateCreated;
@@ -46,12 +46,19 @@ public class User {
     public User() {
     }
 
-    public User(String firstName, String lastName, String username, String password, Integer phoneNumber) {
+    public User(String firstName, String lastName, String username, String password, Long phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.phoneNumber = phoneNumber;
         this.password = password;
+    }
+
+    public User(String firstName, String lastName, String username, Long phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.phoneNumber = phoneNumber;
     }
 
     public Integer getUserId() {
@@ -94,11 +101,11 @@ public class User {
         this.username = username;
     }
 
-    public Integer getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

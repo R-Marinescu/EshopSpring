@@ -43,6 +43,9 @@ public class SecurityConfiguration {
                                 .requestMatchers("/login").permitAll()
                                 .requestMatchers("/api/products/**").permitAll()
                                 .requestMatchers("/api/users/**").permitAll()
+                                .requestMatchers("/api/products/**").permitAll()
+                                .requestMatchers("/api/orders/**").permitAll()
+                                .requestMatchers("/api/cart/**").permitAll()
                                 .anyRequest().authenticated())
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/api/**"))

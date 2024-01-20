@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,26 +49,28 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public Order createOrder(OrderDTO orderDTO) {
         Order order = new Order();
-        order.setUser(userService.convertDTOToUser(orderDTO.getUserDto()));
+        order.setUser(userService.convertDTOToUser(orderDTO.getUserDTO()));
+        order.setOrderDate(Instant.now());
 
         return orderRepo.save(order);
     }
 
     @Override
-    public void updateOrder(Integer orderId, OrderDTO orderDTO) {
+    public Order updateOrder(Integer orderId, OrderDTO orderDTO) {
         Optional<Order> optionalOrder = orderRepo.findById(orderId);
 
         if(optionalOrder.isPresent()) {
             Order existingOrder = optionalOrder.get();
 
-            if(orderDTO.getUserDto() != null) {
-                User user = userService.convertDTOToUser(orderDTO.getUserDto());
+            if(orderDTO.getUserDTO() != null) {
+                User user = userService.convertDTOToUser(orderDTO.getUserDTO());
                 existingOrder.setUser(user);
             }
             orderRepo.save(existingOrder);
         } else{
             throw new EntityNotFoundException("Order with Id " + orderId + " not found");
         }
+        return null;
     }
 
     @Override

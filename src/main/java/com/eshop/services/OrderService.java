@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface OrderService {
     Optional<OrderDTO> getOrderById(Integer orderId);
     Order createOrder(OrderDTO orderDTO);
-    void updateOrder(Integer orderId, OrderDTO orderDTO);
+    Order updateOrder(Integer orderId, OrderDTO orderDTO);
     List<OrderDTO> getAllOrders();
     void deleteOrder(Integer orderId);
 }

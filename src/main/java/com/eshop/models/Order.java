@@ -9,6 +9,7 @@ import java.util.Objects;
 @Table(name = "orders")
 public class Order {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false)
     private Integer orderId;
 
@@ -16,8 +17,16 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "order_date", nullable = false)
+    @Column(name = "order_date")
     private Instant orderDate;
+
+    public Order(User user, Instant orderDate) {
+        this.user = user;
+        this.orderDate = orderDate;
+    }
+
+    public Order() {
+    }
 
     public Integer getOrderId() {
         return orderId;

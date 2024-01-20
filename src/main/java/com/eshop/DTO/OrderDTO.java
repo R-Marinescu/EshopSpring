@@ -1,18 +1,25 @@
 package com.eshop.DTO;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.Instant;
 
 public class OrderDTO {
     private Integer orderId;
-    private UserDTO userDto;
+    private UserDTO userDTO;
     private Instant orderDate;
 
     public OrderDTO() {
     }
 
-    public OrderDTO(Integer orderId, UserDTO userDto, Instant orderDate) {
+    @JsonCreator
+    public OrderDTO(
+            @JsonProperty("orderId") Integer orderId,
+            @JsonProperty("userDTO") UserDTO userDTO,
+            @JsonProperty("orderDate") Instant orderDate) {
         this.orderId = orderId;
-        this.userDto = userDto;
+        this.userDTO = userDTO;
         this.orderDate = orderDate;
     }
 
@@ -20,12 +27,12 @@ public class OrderDTO {
         return orderId;
     }
 
-    public UserDTO getUserDto() {
-        return userDto;
+    public UserDTO getUserDTO() {
+        return userDTO;
     }
 
     public void setUserDto(UserDTO userDto) {
-        this.userDto = userDto;
+        this.userDTO = userDto;
     }
 
     public Instant getOrderDate() {
@@ -34,5 +41,14 @@ public class OrderDTO {
 
     public void setOrderDate(Instant orderDate) {
         this.orderDate = orderDate;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDTO{" +
+                "orderId=" + orderId +
+                ", userDTO=" + userDTO +
+                ", orderDate=" + orderDate +
+                '}';
     }
 }

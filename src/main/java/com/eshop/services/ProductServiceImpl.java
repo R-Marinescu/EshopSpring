@@ -21,8 +21,16 @@ public class ProductServiceImpl implements ProductService{
         this.productRepo = productRepo;
     }
 
-    private ProductDTO convertProductToDTO(Product product) {
+    public ProductDTO convertProductToDTO(Product product) {
         return new ProductDTO(product.getId(), product.getProductName(), product.getPrice(), product.getStockQuantity());
+    }
+
+    public Product convertDTOToProduct(ProductDTO productDTO) {
+        return new Product(
+                productDTO.getProductId(),
+                productDTO.getProductName(),
+                productDTO.getPrice(),
+                productDTO.getStockQuantity());
     }
 
     @Override
@@ -59,7 +67,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void updateProduct(Integer productId, ProductDTO productDTO) {
+    public Product updateProduct(Integer productId, ProductDTO productDTO) {
         Optional<Product> optionalProduct = productRepo.findById(productId);
 
         if(optionalProduct.isPresent()) {
@@ -82,6 +90,7 @@ public class ProductServiceImpl implements ProductService{
         }else {
             throw new EntityNotFoundException("Product with Id " + productId + " not found");
         }
+        return null;
     }
 
     @Override

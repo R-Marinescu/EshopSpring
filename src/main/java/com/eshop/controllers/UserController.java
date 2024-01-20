@@ -24,11 +24,10 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Integer userId) {
-        Optional<UserDTO> userDTOOptional = userService.getUserById(userId);
+        Optional<UserDTO> optionalUserDTO = userService.getUserById(userId);
 
-        if (userDTOOptional.isPresent()) {
-
-            UserDTO userDTO = userDTOOptional.get();
+        if (optionalUserDTO.isPresent()) {
+            UserDTO userDTO = optionalUserDTO.get();
 
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
         } else {
@@ -37,8 +36,30 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    ResponseEntity<User> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<User> createUser(@RequestBody UserDTO userDTO) {
         User createdUser = userService.createUser(userDTO);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/update/{userId}")
+    public ResponseEntity<User> updateUser(@RequestBody UserDTO userDTO, @PathVariable Integer userId) {
+
+        try {
+           User updatedUser = userService.updateUser(userId, userDTO);
+            return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
+        }catch (Exception e) {
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
+        try {
+            userService.deleteUser(userId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

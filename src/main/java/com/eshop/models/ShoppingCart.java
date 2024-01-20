@@ -21,6 +21,15 @@ public class ShoppingCart {
     @Column(name = "quantity")
     private Integer quantity;
 
+    public ShoppingCart() {
+    }
+
+    public ShoppingCart(User user, Product product, Integer quantity) {
+        this.user = user;
+        this.product = product;
+        this.quantity = quantity;
+    }
+
     public Integer getCartId() {
         return cartId;
     }

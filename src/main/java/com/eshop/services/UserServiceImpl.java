@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -35,13 +36,24 @@ public class UserServiceImpl implements UserService {
     }
 
     public User convertDTOToUser(UserDTO userDTO) {
-        return new User(
-                userDTO.getFirstName(),
-                userDTO.getLastName(),
-                userDTO.getUsername(),
-                userDTO.getPassword(),
-                userDTO.getPhoneNumber()
-        );
+        if (userDTO.getUserId() == null) {
+            throw new IllegalArgumentException("UserDTO must have a userId");
+        }
+
+        Optional<User> optionalUser = userRepo.findById(userDTO.getUserId());
+
+        if (optionalUser.isPresent()) {
+            User existingUser = optionalUser.get();
+
+            existingUser.setFirstName(userDTO.getFirstName());
+            existingUser.setLastName(userDTO.getLastName());
+            existingUser.setUsername(userDTO.getUsername());
+            existingUser.setPhoneNumber(userDTO.getPhoneNumber());
+
+            return existingUser;
+        } else {
+            throw new EntityNotFoundException("User with ID " + userDTO.getUserId() + " not found");
+        }
     }
 
     @Override

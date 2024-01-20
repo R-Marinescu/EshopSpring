@@ -1,5 +1,7 @@
 package com.eshop.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 public class UserDTO {
@@ -8,11 +10,16 @@ public class UserDTO {
     private String lastName;
     private String username;;
     private String password;
-    private Integer phoneNumber;
+    private Long phoneNumber;
     private Date dateCreated;
     private boolean enabled;
 
-    public UserDTO (Integer userId, String firstName, String lastName, String username, Integer phoneNumber) {
+    public UserDTO(
+            @JsonProperty("userId") Integer userId,
+            @JsonProperty("firstName") String firstName,
+            @JsonProperty("lastName") String lastName,
+            @JsonProperty("username") String username,
+            @JsonProperty("phoneNumber") Long phoneNumber) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -60,11 +67,11 @@ public class UserDTO {
         this.password = password;
     }
 
-    public Integer getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

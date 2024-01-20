@@ -9,7 +9,8 @@ public class ShoppingCartDTO {
 
     private Integer quantity;
 
-    public ShoppingCartDTO(UserDTO userDTO, ProductDTO productDto, Integer quantity) {
+    public ShoppingCartDTO(Integer cartId, UserDTO userDTO, ProductDTO productDto, Integer quantity) {
+        this.cartId = cartId;
         this.userDTO = userDTO;
         this.productDTO = productDto;
         this.quantity = quantity;
