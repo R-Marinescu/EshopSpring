@@ -1,5 +1,8 @@
 package com.eshop.DTO;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 public class ProductDTO {
@@ -11,7 +14,12 @@ public class ProductDTO {
 
     private Integer stockQuantity;
 
-    public ProductDTO(Integer productId, String productName, BigDecimal price, Integer stockQuantity) {
+    @JsonCreator
+    public ProductDTO(
+            @JsonProperty("productId") Integer productId,
+            @JsonProperty("productName") String productName,
+            @JsonProperty("price") BigDecimal price,
+            @JsonProperty("stockQuantity") Integer stockQuantity) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;

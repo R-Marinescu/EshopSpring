@@ -35,25 +35,45 @@ public class UserServiceImpl implements UserService {
                 user.getPhoneNumber());
     }
 
+//    public User convertDTOToUser(UserDTO userDTO) {
+//        if (userDTO.getUserId() == null) {
+//            throw new IllegalArgumentException("UserDTO must have a userId");
+//        }
+//
+//        Optional<User> optionalUser = userRepo.findById(userDTO.getUserId());
+//
+//        if (optionalUser.isPresent()) {
+//            User existingUser = optionalUser.get();
+//
+//            existingUser.setFirstName(userDTO.getFirstName());
+//            existingUser.setLastName(userDTO.getLastName());
+//            existingUser.setUsername(userDTO.getUsername());
+//            existingUser.setPhoneNumber(userDTO.getPhoneNumber());
+//
+//            return existingUser;
+//        } else {
+//            throw new EntityNotFoundException("User with ID " + userDTO.getUserId() + " not found");
+//        }
+//    }
+
     public User convertDTOToUser(UserDTO userDTO) {
-        if (userDTO.getUserId() == null) {
-            throw new IllegalArgumentException("UserDTO must have a userId");
+        User user = new User();
+
+        if (userDTO.getUserId() != null) {
+            Optional<User> optionalUser = userRepo.findById(userDTO.getUserId());
+
+            if (optionalUser.isPresent()) {
+                User existingUser = optionalUser.get();
+
+                user.setUserId(existingUser.getUserId());
+                user.setFirstName(userDTO.getFirstName());
+                user.setLastName(userDTO.getLastName());
+                user.setUsername(userDTO.getUsername());
+                user.setPhoneNumber(userDTO.getPhoneNumber());
+                user.setEnabled(existingUser.isEnabled());
+            }
         }
-
-        Optional<User> optionalUser = userRepo.findById(userDTO.getUserId());
-
-        if (optionalUser.isPresent()) {
-            User existingUser = optionalUser.get();
-
-            existingUser.setFirstName(userDTO.getFirstName());
-            existingUser.setLastName(userDTO.getLastName());
-            existingUser.setUsername(userDTO.getUsername());
-            existingUser.setPhoneNumber(userDTO.getPhoneNumber());
-
-            return existingUser;
-        } else {
-            throw new EntityNotFoundException("User with ID " + userDTO.getUserId() + " not found");
-        }
+        return user;
     }
 
     @Override
@@ -73,16 +93,16 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User createUser(UserDTO userDTO) {
-        User user = new User();
+    public User createUser(User user) {
+        User newUser = new User();
+        System.out.println(user);
+        newUser.setFirstName(user.getFirstName());
+        newUser.setLastName(user.getLastName());
+        newUser.setUsername(user.getUsername());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setPhoneNumber(user.getPhoneNumber());
 
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setPhoneNumber(userDTO.getPhoneNumber());
-
-        return userRepo.save(user);
+        return userRepo.save(newUser);
     }
 
     @Override

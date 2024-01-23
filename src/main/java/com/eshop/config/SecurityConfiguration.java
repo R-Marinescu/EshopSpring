@@ -32,7 +32,13 @@ public class SecurityConfiguration {
                         formLogin
                                 .loginPage("/login")
                                 .permitAll()
-                                .defaultSuccessUrl("/authenticated", true));
+                                .defaultSuccessUrl("/authenticated", true))
+                .logout(logout ->
+                        logout
+                                .logoutUrl("/logout") // Specify the URL for logout
+                                .logoutSuccessUrl("/login") // Redirect to login page after logout
+                                .invalidateHttpSession(true) // Invalidate the HttpSession
+                                .deleteCookies("JSESSIONID"));
         http
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests

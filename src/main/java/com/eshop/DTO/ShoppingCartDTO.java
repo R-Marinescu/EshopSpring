@@ -1,5 +1,8 @@
 package com.eshop.DTO;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ShoppingCartDTO {
     private Integer cartId;
 
@@ -9,7 +12,12 @@ public class ShoppingCartDTO {
 
     private Integer quantity;
 
-    public ShoppingCartDTO(Integer cartId, UserDTO userDTO, ProductDTO productDto, Integer quantity) {
+    @JsonCreator
+    public ShoppingCartDTO(
+            @JsonProperty("cartId") Integer cartId,
+            @JsonProperty("userDTO") UserDTO userDTO,
+            @JsonProperty("productDto") ProductDTO productDto,
+            @JsonProperty("quantity") Integer quantity) {
         this.cartId = cartId;
         this.userDTO = userDTO;
         this.productDTO = productDto;
@@ -45,5 +53,15 @@ public class ShoppingCartDTO {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "ShoppingCartDTO{" +
+                "cartId=" + cartId +
+                ", userDTO=" + userDTO +
+                ", productDTO=" + productDTO +
+                ", quantity=" + quantity +
+                '}';
     }
 }

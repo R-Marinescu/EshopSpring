@@ -1,6 +1,10 @@
 package com.eshop.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenerationTime;
 
 import java.util.Date;
 import java.util.Objects;
@@ -30,10 +34,11 @@ public class User {
     private Long phoneNumber;
 
     @Column(name = "date_created")
+    @CreationTimestamp
     private Date dateCreated;
 
     @Column(name = "enabled")
-    private boolean enabled;
+    private boolean enabled = true;
 
     @ManyToMany
     @JoinTable(
@@ -46,7 +51,13 @@ public class User {
     public User() {
     }
 
-    public User(String firstName, String lastName, String username, String password, Long phoneNumber) {
+    @JsonCreator
+    public User(
+            @JsonProperty("firstName") String firstName,
+            @JsonProperty("lastName") String lastName,
+            @JsonProperty("username") String username,
+            @JsonProperty("password") String password,
+            @JsonProperty("phoneNumber") Long phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;

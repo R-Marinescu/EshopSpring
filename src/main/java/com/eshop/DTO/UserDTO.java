@@ -1,5 +1,6 @@
 package com.eshop.DTO;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
@@ -14,6 +15,7 @@ public class UserDTO {
     private Date dateCreated;
     private boolean enabled;
 
+    @JsonCreator
     public UserDTO(
             @JsonProperty("userId") Integer userId,
             @JsonProperty("firstName") String firstName,

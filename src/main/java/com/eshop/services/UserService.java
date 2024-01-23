@@ -11,7 +11,7 @@ public interface UserService {
     UserDTO convertUserToDTO(User user);
     User convertDTOToUser(UserDTO userDTO);
     Optional<UserDTO> getUserById(Integer userId);
-    User createUser(UserDTO userDTO);
+    User createUser(User user);
     User updateUser(Integer userId, UserDTO userDTO);
     List<UserDTO> getAllUsers();
     void deleteUser(Integer userId);

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/products")
 public class ProductController {
@@ -30,13 +32,24 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        List<ProductDTO> products = productService.getAllProducts();
+
+        if (!products.isEmpty()) {
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/create")
     ResponseEntity<Product> createProduct(@RequestBody ProductDTO productDTO) {
         Product createdProduct = productService.createProduct(productDTO);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 
-    @PostMapping("/update/{}productId")
+    @PostMapping("/update/{productId}")
     public ResponseEntity<Product> updateProduct(@RequestBody ProductDTO productDTO, @PathVariable Integer productId) {
         try {
             Product updatedProduct = productService.updateProduct(productId, productDTO);

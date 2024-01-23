@@ -36,6 +36,7 @@ public class ShoppingCartController {
 
     @PostMapping("/create")
     public ResponseEntity<ShoppingCart> createShoppingCart(@RequestBody ShoppingCartDTO shoppingCartDTO) {
+        System.out.println(shoppingCartDTO);
         ShoppingCart createdShoppingCart = shoppingCartService.createShoppingCart(shoppingCartDTO);
         return new ResponseEntity<>(createdShoppingCart, HttpStatus.CREATED);
     }

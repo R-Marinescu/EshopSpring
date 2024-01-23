@@ -5,6 +5,7 @@ import com.eshop.DTO.UserDTO;
 import com.eshop.models.Order;
 import com.eshop.models.User;
 import com.eshop.repositories.OrderRepo;
+import com.eshop.repositories.UserRepo;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,13 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService{
 
     private final OrderRepo orderRepo;
+
+    private final UserRepo userRepo;
     private final UserService userService;
 
     @Autowired
-    public OrderServiceImpl(OrderRepo orderRepo, UserService userService) {
+    public OrderServiceImpl(OrderRepo orderRepo, UserService userService, UserRepo userRepo) {
+        this.userRepo = userRepo;
         this.orderRepo = orderRepo;
         this.userService = userService;
     }
@@ -54,6 +58,29 @@ public class OrderServiceImpl implements OrderService{
 
         return orderRepo.save(order);
     }
+
+//    @Override
+//    public Order createOrder(OrderDTO orderDTO) {
+//        Order order = new Order();
+//
+//        // Fetch the user from the database based on the user ID in the orderDTO
+//        //Optional<User> optionalUser = userRepo.findById(orderDTO.getUserDTO().getUserId());
+//        Optional<UserDTO> optionalUser = userService.getUserById(orderDTO.getUserDTO().getUserId());
+//
+//        if (optionalUser.isPresent()) {
+//            UserDTO existingUser = optionalUser.get();
+//
+//            // Associate the existing user with the order
+//            order.setUser(existingUser);
+//            order.setOrderDate(Instant.now());
+//
+//            return orderRepo.save(order);
+//        } else {
+//            // Handle the case where the user with the specified ID is not found
+//            throw new EntityNotFoundException("User with ID " + orderDTO.getUserDTO().getUserId() + " not found");
+//        }
+//    }
+
 
     @Override
     public Order updateOrder(Integer orderId, OrderDTO orderDTO) {
