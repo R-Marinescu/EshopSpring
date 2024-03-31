@@ -15,21 +15,30 @@ public class Role {
     @JdbcTypeCode(SqlTypes.INTEGER)
     private Long roleId;
 
-    @Column(name = "role_name")
-    private String roleName;
+    @Column(name = "role")
+    private String role;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<User> users;
 
     public Long getRoleId() {
         return roleId;
     }
 
-    public String setRoleName(String roleType) {
-        return this.roleName = roleType;
+    public String setRole(String roleType) {
+        return this.role = roleType;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getRole() {
+        return role;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "roleId=" + roleId +
+                ", role='" + role + '\'' +
+                ", users=" + users +
+                '}';
     }
 }

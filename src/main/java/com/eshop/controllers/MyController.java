@@ -22,13 +22,25 @@ public class MyController {
 
     @GetMapping("/user")
     public String userPage() {
+        System.out.println("this is user page");
         return "user";
+    }
+
+    @GetMapping("/profile")
+    public String profilePage() {
+        System.out.println("this is profile");
+        return "profile";
     }
 
     @GetMapping("/login")
     public String loginPage() {
         System.out.println("edw login");
         return "login";
+    }
+
+    @GetMapping("/index")
+    public String indexPage() {
+        return "index";
     }
 
     @GetMapping("/logout")

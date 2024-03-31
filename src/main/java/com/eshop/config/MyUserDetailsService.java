@@ -46,6 +46,7 @@ public class MyUserDetailsService implements UserDetailsService {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
 
         List<Role> roles = roleRepo.findRolesByUserId(user.getUserId());
+        System.out.println(roles);
         return new MyUserPrincipal(user, roles);
     }
 }

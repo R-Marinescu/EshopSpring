@@ -42,17 +42,18 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-//                                .requestMatchers("/profile").hasAnyRole("ADMIN", "USER")
-//                                .requestMatchers("/admin").hasAnyRole("ADMIN")
-//                                .requestMatchers("/user").hasAnyRole("USER")
-//                                .requestMatchers("/home").permitAll()
+                                .requestMatchers("/index").permitAll()
                                 .requestMatchers("/login").permitAll()
+                                .requestMatchers("/home").permitAll()
+                                .requestMatchers("/profile").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/admin").hasAnyRole("ADMIN")
+                                .requestMatchers("/user").hasRole("USER")
                                 .requestMatchers("/api/products/**").permitAll()
                                 .requestMatchers("/api/users/**").permitAll()
                                 .requestMatchers("/api/products/**").permitAll()
                                 .requestMatchers("/api/orders/**").permitAll()
                                 .requestMatchers("/api/cart/**").permitAll()
-                                .anyRequest().authenticated())
+                                .anyRequest().permitAll())
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/api/**"))
                 .httpBasic(Customizer.withDefaults());

@@ -41,8 +41,8 @@ public class RoleServiceImpl implements RoleService{
         if(optionalRole.isPresent()) {
             Role existingRole = optionalRole.get();
 
-            if(role.getRoleName() != null) {
-                existingRole.setRoleName(role.getRoleName());
+            if(role.getRole() != null) {
+                existingRole.setRole(role.getRole());
             }
 
             roleRepo.save(existingRole);

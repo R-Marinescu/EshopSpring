@@ -1,0 +1,18 @@
+{
+  "name": "typescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "/src/main/resources/static/js/index.js",
+  "dependencies": {
+    "typescript": "^5.4.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node ../static/js/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p resources/typescript/tsconfig.json --outDir resources/static/js",
+    "watch": "../typescript/node_modules/.bin/tsc -w"
+  },
+  "author": "",
+  "license": "ISC"
+}
