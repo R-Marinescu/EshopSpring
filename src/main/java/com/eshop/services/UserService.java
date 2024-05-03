@@ -11,6 +11,7 @@ public interface UserService {
     UserDTO convertUserToDTO(User user);
     User convertDTOToUser(UserDTO userDTO);
     Optional<UserDTO> getUserById(Integer userId);
+    Optional<UserDTO> getUserByUsername(String username);
     User createUser(User user);
     User updateUser(Integer userId, UserDTO userDTO);
     List<UserDTO> getAllUsers();

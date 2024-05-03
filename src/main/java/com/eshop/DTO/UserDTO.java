@@ -29,6 +29,11 @@ public class UserDTO {
         this.phoneNumber = phoneNumber;
     }
 
+    public UserDTO(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
 
     public UserDTO() {
     }

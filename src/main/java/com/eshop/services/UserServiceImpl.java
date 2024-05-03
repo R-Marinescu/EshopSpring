@@ -84,6 +84,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<UserDTO> getUserByUsername(String username) {
+        Optional<User> optionalUser = userRepo.findUserByUsername(username);
+        return optionalUser.map(this::convertUserToDTO);
+    }
+
+    @Override
     public List<UserDTO> getAllUsers() {
         return userRepo.findAll()
                 .stream()

@@ -12,7 +12,7 @@ public class MyController {
     @GetMapping("/home")
     public String homePage() {
         System.out.println("edw home");
-        return "home";
+        return "html/home.html";
     }
 
     @GetMapping("/admin")
@@ -29,12 +29,12 @@ public class MyController {
     @GetMapping("/profile")
     public String profilePage() {
         System.out.println("this is profile");
-        return "profile";
+        return "redirect:/html/profile.html";
     }
 
     @GetMapping("/login")
     public String loginPage() {
-        System.out.println("edw login");
+
         return "login";
     }
 
@@ -53,7 +53,8 @@ public class MyController {
 
     @GetMapping("/authenticated")
     public String authenticated() {
-        return "authenticated";
+        System.out.println("edw authentication");
+        return "redirect:/html/authenticated.html";
     }
 }
 
