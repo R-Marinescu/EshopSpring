@@ -15,7 +15,7 @@ public class Role {
     @JdbcTypeCode(SqlTypes.INTEGER)
     private Long roleId;
 
-    @Column(name = "role")
+    @Column(name = "role_name")
     private String role;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
