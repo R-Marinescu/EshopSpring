@@ -1,6 +1,7 @@
 package com.eshop.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,6 +10,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -40,11 +43,6 @@ public class SecurityConfiguration {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-//   @Bean
-//    public AuthenticationManager getAuthenticationManager() {
-//        return authenticationManager;
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -54,23 +52,28 @@ public class SecurityConfiguration {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"))
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionFixation().migrateSession()
+                        .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::migrateSession)
                         .maximumSessions(1).expiredUrl("/login"))
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .invalidSessionUrl("/login?invalid")
+                        .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::migrateSession)
+                        .maximumSessions(1)
+                        .expiredUrl("/login"))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/home").permitAll()
                         .requestMatchers("/api/auth/loginApi").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/index").permitAll()
                         .requestMatchers("/profile").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/admin").hasAnyRole("ADMIN")
                         .requestMatchers("/user").hasRole("USER")
                         .requestMatchers("/api/products/**").permitAll()
-                        //.requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/api/users/user-details").authenticated()
-                        .requestMatchers("/api/products/**").permitAll()
+                        .requestMatchers("/api/users/create").permitAll()
                         .requestMatchers("/api/orders/**").permitAll()
                         .requestMatchers("/api/cart/**").permitAll()
-                        .requestMatchers("/api/**").authenticated()
+                        //.requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/api/admin/**").permitAll()
                         .anyRequest().permitAll())
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .csrf(AbstractHttpConfigurer::disable);
@@ -78,5 +81,10 @@ public class SecurityConfiguration {
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public ServletContextInitializer servletContextInitializer() {
+        return servletContext -> servletContext.getSessionCookieConfig().setMaxAge(1800); // 1800 seconds = 30 minutes
     }
 }

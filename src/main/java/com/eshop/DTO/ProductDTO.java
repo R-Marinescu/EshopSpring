@@ -56,4 +56,14 @@ public class ProductDTO {
     public void setStockQuantity(Integer stockQuantity) {
         this.stockQuantity = stockQuantity;
     }
+
+    @Override
+    public String toString() {
+        return "ProductDTO{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", price=" + price +
+                ", stockQuantity=" + stockQuantity +
+                '}';
+    }
 }

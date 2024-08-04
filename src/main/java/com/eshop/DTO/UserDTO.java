@@ -14,6 +14,7 @@ public class UserDTO {
     private Long phoneNumber;
     private Date dateCreated;
     private boolean enabled;
+    private String role;
 
     @JsonCreator
     public UserDTO(
@@ -28,6 +29,22 @@ public class UserDTO {
         this.username = username;
         this.phoneNumber = phoneNumber;
     }
+
+    public UserDTO(
+             Integer userId,
+             String firstName,
+             String lastName,
+             String username,
+             Long phoneNumber,
+             String role) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+    }
+
 
     public UserDTO(String username, String password) {
         this.username = username;
@@ -68,6 +85,10 @@ public class UserDTO {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getRole() {
+       return role;
     }
 
     public void setPassword(String password) {

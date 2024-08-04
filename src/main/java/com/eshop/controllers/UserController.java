@@ -1,8 +1,10 @@
 package com.eshop.controllers;
 
 import com.eshop.DTO.UserDTO;
+import com.eshop.models.Role;
 import com.eshop.models.User;
 import com.eshop.repositories.MyUserPrincipal;
+import com.eshop.repositories.RoleRepo;
 import com.eshop.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +15,19 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
+    private final RoleRepo roleRepo;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RoleRepo roleRepo) {
         this.userService = userService;
+        this.roleRepo = roleRepo;
     }
 
     @GetMapping("/{userId}")
@@ -40,12 +45,15 @@ public class UserController {
 
     @GetMapping("/user-details")
     public UserDTO getUserDetails(@AuthenticationPrincipal MyUserPrincipal user) {
+        List<Role> roles = roleRepo.findRolesByUserId(user.getUserId());
+        String roleString = roles.stream().map(Role::getRole).collect(Collectors.joining(", "));
         return new UserDTO(
                 user.getUserId(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getUsername(),
-                user.getPhoneNumber());
+                user.getPhoneNumber(),
+                roleString);
     }
 
     @GetMapping("/all")
