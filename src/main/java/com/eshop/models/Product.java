@@ -21,14 +21,18 @@ public class Product {
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
+    @Column(name = "image", nullable = false)
+    private String image;
+
     public Product() {
     }
 
-    public Product(Integer productId, String productName, BigDecimal price, Integer stockQuantity) {
+    public Product(Integer productId, String productName, BigDecimal price, Integer stockQuantity, String image) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.stockQuantity = stockQuantity;
+        this.image = image;
     }
 
     public Integer getId() {
@@ -59,4 +63,22 @@ public class Product {
         this.stockQuantity = stockQuantity;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", price=" + price +
+                ", stockQuantity=" + stockQuantity +
+                ", image='" + image + '\'' +
+                '}';
+    }
 }

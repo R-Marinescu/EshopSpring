@@ -5,8 +5,10 @@ import com.eshop.models.Product;
 import com.eshop.repositories.ProductRepo;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,13 +18,19 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductRepo productRepo;
 
+    @Value("${base.url}")
+    private String baseUrl;
+
     @Autowired
     public ProductServiceImpl(ProductRepo productRepo) {
         this.productRepo = productRepo;
     }
 
     public ProductDTO convertProductToDTO(Product product) {
-        return new ProductDTO(product.getId(), product.getProductName(), product.getPrice(), product.getStockQuantity());
+        String imageUrl = baseUrl + "/images/" + new File(product.getImage()).getName();
+        product.setImage(imageUrl);
+
+        return new ProductDTO(product.getId(), product.getProductName(), product.getPrice(), product.getStockQuantity(), product.getImage());
     }
 
     public Product convertDTOToProduct(ProductDTO productDTO) {
@@ -30,7 +38,8 @@ public class ProductServiceImpl implements ProductService{
                 productDTO.getProductId(),
                 productDTO.getProductName(),
                 productDTO.getPrice(),
-                productDTO.getStockQuantity());
+                productDTO.getStockQuantity(),
+                productDTO.getImage());
     }
 
     @Override
@@ -39,6 +48,9 @@ public class ProductServiceImpl implements ProductService{
 
         if(optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
+
+            String imageUrl = baseUrl + "/images/" + new File(product.getImage()).getName();
+            product.setImage(imageUrl);
 
             return convertProductToDTO(product);
         } else {
@@ -62,6 +74,7 @@ public class ProductServiceImpl implements ProductService{
         product.setProductName(productDTO.getProductName());
         product.setPrice(productDTO.getPrice());
         product.setStockQuantity(productDTO.getStockQuantity());
+        product.setImage(productDTO.getImage());
 
         return productRepo.save(product);
     }
@@ -85,12 +98,28 @@ public class ProductServiceImpl implements ProductService{
                 existingProduct.setStockQuantity(productDTO.getStockQuantity());
             }
 
+            if(productDTO.getImage() != null) {
+                existingProduct.setImage(productDTO.getImage());
+            }
+
             productRepo.save(existingProduct);
 
         }else {
             throw new EntityNotFoundException("Product with Id " + productId + " not found");
         }
         return null;
+    }
+
+    public void updateProductImage(Integer productId, String imageName) {
+        Optional<Product> optionalProduct = productRepo.findById(productId);
+
+        if(optionalProduct.isPresent()) {
+            Product existingProduct = optionalProduct.get();
+            existingProduct.setImage(imageName);
+            productRepo.save(existingProduct);
+        } else {
+            throw new EntityNotFoundException("Product with Id " + productId + " not found");
+        }
     }
 
     @Override

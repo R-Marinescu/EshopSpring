@@ -1,5 +1,6 @@
 package com.eshop.config;
 
+import com.eshop.config.TokenConfig.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;

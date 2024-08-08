@@ -10,6 +10,7 @@ public interface ProductService {
     List<ProductDTO> getAllProducts();
     Product createProduct(ProductDTO productDTO);
     Product updateProduct(Integer productId, ProductDTO productDTO);
+    void updateProductImage(Integer productId,String image);
     void deleteProduct(Integer productId);
     public ProductDTO convertProductToDTO(Product product);
     public Product convertDTOToProduct(ProductDTO productDTO);

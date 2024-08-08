@@ -4,7 +4,7 @@ import com.eshop.DTO.UserDTO;
 import com.eshop.Pojo.LoginResponse;
 import com.eshop.config.MyUserDetailsService;
 import com.eshop.config.SecurityConfiguration;
-import com.eshop.config.TokenGenerator;
+import com.eshop.config.TokenConfig.TokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

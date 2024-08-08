@@ -1,4 +1,4 @@
-package com.eshop.config;
+package com.eshop.config.TokenConfig;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;

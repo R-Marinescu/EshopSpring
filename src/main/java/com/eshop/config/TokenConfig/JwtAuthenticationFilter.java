@@ -1,5 +1,6 @@
-package com.eshop.config;
+package com.eshop.config.TokenConfig;
 
+import com.eshop.config.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
