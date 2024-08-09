@@ -1,8 +1,11 @@
 package com.eshop.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -17,8 +20,15 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "total_price")
+    private Integer totalPrice;
+
     @Column(name = "order_date")
     private Instant orderDate;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     public Order(User user, Instant orderDate) {
         this.user = user;
@@ -44,12 +54,28 @@ public class Order {
         this.user = user;
     }
 
+    public Integer getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Integer totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     public Instant getOrderDate() {
         return orderDate;
     }
 
     public void setOrderDate(Instant orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
     @Override
@@ -70,6 +96,7 @@ public class Order {
         return "Order{" +
                 "orderId=" + orderId +
                 ", user=" + user +
+                ", totalPrice=" + totalPrice +
                 ", orderDate=" + orderDate +
                 '}';
     }

@@ -80,7 +80,6 @@ public class AdminController {
     @DeleteMapping("/deleteProduct/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Integer productId) {
         try {
-            System.out.println("EDWWWW???");
             productService.deleteProduct(productId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (EntityNotFoundException e) {

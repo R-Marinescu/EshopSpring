@@ -3,10 +3,16 @@ package com.eshop.services;
 import com.eshop.DTO.OrderDTO;
 import com.eshop.DTO.UserDTO;
 import com.eshop.models.Order;
+import com.eshop.models.OrderItem;
+import com.eshop.models.Product;
 import com.eshop.models.User;
 import com.eshop.repositories.OrderRepo;
+import com.eshop.repositories.ProductRepo;
 import com.eshop.repositories.UserRepo;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,30 +22,31 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     private final OrderRepo orderRepo;
-
     private final UserRepo userRepo;
     private final UserService userService;
+    private final ProductRepo productRepo;
 
     @Autowired
-    public OrderServiceImpl(OrderRepo orderRepo, UserService userService, UserRepo userRepo) {
-        this.userRepo = userRepo;
+    public OrderServiceImpl(OrderRepo orderRepo, UserService userService, UserRepo userRepo, ProductRepo productRepo) {
         this.orderRepo = orderRepo;
         this.userService = userService;
+        this.userRepo = userRepo;
+        this.productRepo = productRepo;
     }
 
     private OrderDTO convertOrderToDTO(Order order) {
         UserDTO userDTO = userService.convertUserToDTO(order.getUser());
-        return new OrderDTO(order.getOrderId(), userDTO, order.getOrderDate());
+        return new OrderDTO(order.getOrderId(), userDTO.getUserId(), order.getTotalPrice(), order.getOrderDate());
     }
 
     @Override
     public Optional<OrderDTO> getOrderById(Integer orderId) {
-        Optional<Order> optionalOrder = orderRepo.findById(orderId);
-
-        return optionalOrder.map(this::convertOrderToDTO);
+        return orderRepo.findById(orderId).map(this::convertOrderToDTO);
     }
 
     @Override
@@ -51,64 +58,86 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
+    @Transactional
     public Order createOrder(OrderDTO orderDTO) {
-        Order order = new Order();
-        order.setUser(userService.convertDTOToUser(orderDTO.getUserDTO()));
-        order.setOrderDate(Instant.now());
+        logger.debug("Creating order for user ID: {}", orderDTO.getUserId());
 
-        return orderRepo.save(order);
+        User user = userRepo.findById(orderDTO.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User with ID " + orderDTO.getUserId() + " not found"));
+
+        Order newOrder = new Order();
+        newOrder.setUser(user);
+        newOrder.setTotalPrice(orderDTO.getTotalPrice());
+        newOrder.setOrderDate(Instant.now());
+
+        List<OrderItem> orderItems = orderDTO.getOrderItems().stream()
+                .map(itemDto -> {
+                    Product product = productRepo.findById(itemDto.getProductDTO().getProductId())
+                            .orElseThrow(() -> new EntityNotFoundException("Product with ID " + itemDto.getProductDTO().getProductId() + " not found"));
+
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setProduct(product);
+                    orderItem.setQuantity(itemDto.getQuantity());
+                    orderItem.setPrice(itemDto.getPrice());
+                    orderItem.setOrder(newOrder);
+
+                    return orderItem;
+                })
+                .collect(Collectors.toList());
+
+        newOrder.setOrderItems(orderItems);
+
+        return orderRepo.save(newOrder);
     }
-
-//    @Override
-//    public Order createOrder(OrderDTO orderDTO) {
-//        Order order = new Order();
-//
-//        // Fetch the user from the database based on the user ID in the orderDTO
-//        //Optional<User> optionalUser = userRepo.findById(orderDTO.getUserDTO().getUserId());
-//        Optional<UserDTO> optionalUser = userService.getUserById(orderDTO.getUserDTO().getUserId());
-//
-//        if (optionalUser.isPresent()) {
-//            UserDTO existingUser = optionalUser.get();
-//
-//            // Associate the existing user with the order
-//            order.setUser(existingUser);
-//            order.setOrderDate(Instant.now());
-//
-//            return orderRepo.save(order);
-//        } else {
-//            // Handle the case where the user with the specified ID is not found
-//            throw new EntityNotFoundException("User with ID " + orderDTO.getUserDTO().getUserId() + " not found");
-//        }
-//    }
-
 
     @Override
     public Order updateOrder(Integer orderId, OrderDTO orderDTO) {
-        Optional<Order> optionalOrder = orderRepo.findById(orderId);
+        logger.debug("Updating order with ID: {}", orderId);
 
-        if(optionalOrder.isPresent()) {
-            Order existingOrder = optionalOrder.get();
+        Order existingOrder = orderRepo.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order with ID " + orderId + " not found"));
 
-            if(orderDTO.getUserDTO() != null) {
-                User user = userService.convertDTOToUser(orderDTO.getUserDTO());
-                existingOrder.setUser(user);
-            }
-            orderRepo.save(existingOrder);
-        } else{
-            throw new EntityNotFoundException("Order with Id " + orderId + " not found");
+        if (orderDTO.getUserId() != null) {
+            User user = userRepo.findById(orderDTO.getUserId())
+                    .orElseThrow(() -> new EntityNotFoundException("User with ID " + orderDTO.getUserId() + " not found"));
+            existingOrder.setUser(user);
         }
-        return null;
+
+        if (orderDTO.getTotalPrice() != null) {
+            existingOrder.setTotalPrice(orderDTO.getTotalPrice());
+        }
+        if (orderDTO.getOrderDate() != null) {
+            existingOrder.setOrderDate(orderDTO.getOrderDate());
+        }
+
+        List<OrderItem> updatedOrderItems = orderDTO.getOrderItems().stream()
+                .map(itemDto -> {
+                    Product product = productRepo.findById(itemDto.getProductDTO().getProductId())
+                            .orElseThrow(() -> new EntityNotFoundException("Product with ID " + itemDto.getProductDTO().getProductId() + " not found"));
+
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setProduct(product);
+                    orderItem.setQuantity(itemDto.getQuantity());
+                    orderItem.setPrice(itemDto.getPrice());
+                    orderItem.setOrder(existingOrder);
+
+                    return orderItem;
+                })
+                .collect(Collectors.toList());
+
+        existingOrder.setOrderItems(updatedOrderItems);
+
+        return orderRepo.save(existingOrder);
     }
 
     @Override
     public void deleteOrder(Integer orderId) {
-        Optional<Order> optionalOrder = orderRepo.findById(orderId);
+        logger.debug("Deleting order with ID: {}", orderId);
 
-        if(optionalOrder.isPresent()) {
+        if (orderRepo.existsById(orderId)) {
             orderRepo.deleteById(orderId);
-
-        }else{
-            throw new EntityNotFoundException("Order with Id " + orderId + " not found");
+        } else {
+            throw new EntityNotFoundException("Order with ID " + orderId + " not found");
         }
     }
 }

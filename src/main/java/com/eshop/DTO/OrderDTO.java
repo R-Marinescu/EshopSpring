@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Instant;
+import java.util.List;
 
 public class OrderDTO {
     private Integer orderId;
-    private UserDTO userDTO;
+    private Integer userId;
+    private Integer totalPrice;
     private Instant orderDate;
+    private List<OrderItemDTO> orderItems;
+
 
     public OrderDTO() {
     }
@@ -16,10 +20,12 @@ public class OrderDTO {
     @JsonCreator
     public OrderDTO(
             @JsonProperty("orderId") Integer orderId,
-            @JsonProperty("userDTO") UserDTO userDTO,
+            @JsonProperty("userId") Integer userId,
+            @JsonProperty("totalPrice") Integer totalPrice,
             @JsonProperty("orderDate") Instant orderDate) {
         this.orderId = orderId;
-        this.userDTO = userDTO;
+        this.userId = userId;
+        this.totalPrice = totalPrice;
         this.orderDate = orderDate;
     }
 
@@ -27,12 +33,12 @@ public class OrderDTO {
         return orderId;
     }
 
-    public UserDTO getUserDTO() {
-        return userDTO;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUserDto(UserDTO userDto) {
-        this.userDTO = userDto;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Instant getOrderDate() {
@@ -43,12 +49,28 @@ public class OrderDTO {
         this.orderDate = orderDate;
     }
 
+    public void setTotalPrice(Integer totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public List<OrderItemDTO> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItemDTO> orderItems) {
+        this.orderItems = orderItems;
+    }
+
     @Override
     public String toString() {
         return "OrderDTO{" +
                 "orderId=" + orderId +
-                ", userDTO=" + userDTO +
+                ", userDTO=" + userId +
                 ", orderDate=" + orderDate +
                 '}';
+    }
+
+    public Integer getTotalPrice() {
+        return totalPrice;
     }
 }

@@ -35,12 +35,24 @@ public class OrderController {
         }
     }
 
+//    @PostMapping("/create")
+//    ResponseEntity<Order> createOrder(@RequestBody Order order) {
+//        System.out.println("edw?" + order);
+//        try {
+//            Order createdOrder = orderService.createOrder(order);
+//            return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+//        } catch (IllegalArgumentException e) {
+//
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
     @PostMapping("/create")
     ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO) {
         System.out.println(orderDTO);
         try {
-            Order createdOrder = orderService.createOrder(orderDTO);
-            return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+            Order createOrder = orderService.createOrder(orderDTO);
+            return new ResponseEntity<>(createOrder, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
