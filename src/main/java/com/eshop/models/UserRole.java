@@ -13,35 +13,37 @@ public class UserRole implements Serializable {
     @Column(name = "user_role_id")
     private Integer userRolesId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id")
+    private Integer userId;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @Column(name = "role_id")
+    private Integer roleId;
+
+    public UserRole(Integer userId, Integer roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
+    }
+
+    public UserRole() {
+    }
 
     public Integer getUserRolesId() {
         return userRolesId;
     }
 
-    public void setUserRolesId(Integer userRolesId) {
-        this.userRolesId = userRolesId;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public User getUser() {
-        return user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 }

@@ -1,5 +1,6 @@
 package com.eshop.services;
 
+import com.eshop.models.User;
 import com.eshop.models.UserRole;
 import com.eshop.repositories.UserRolesRepo;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,29 +31,14 @@ public class UserRoleServiceImpl implements UserRoleService{
     }
 
     @Override
-    public UserRole createUserRole(UserRole userRole) {
-        return userRolesRepo.save(userRole);
-    }
+    public UserRole createUserRole(User user) {
+        UserRole newUserRole = new UserRole();
 
-    @Override
-    public void updateUSerRole(Integer userRoleId, UserRole userRole) {
-        Optional<UserRole> optionalUserRole = getUserRoleById(userRoleId);
+        newUserRole.setUserId(user.getUserId());
+        //Default user role
+        newUserRole.setRoleId(2);
 
-        if(optionalUserRole.isPresent()) {
-            UserRole existingUserRole = optionalUserRole.get();
-
-            if(userRole.getRole() != null) {
-                existingUserRole.setRole(userRole.getRole());
-            }
-
-            if(userRole.getUser() != null) {
-                existingUserRole.setUser(userRole.getUser());
-            }
-
-            userRolesRepo.save(existingUserRole);
-        }else {
-            throw new EntityNotFoundException("UserRole with ID " + userRoleId + " not found");
-        }
+        return userRolesRepo.save(newUserRole);
     }
 
     @Override

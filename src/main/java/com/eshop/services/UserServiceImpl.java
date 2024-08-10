@@ -17,13 +17,15 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+    private final UserRoleService userRoleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo) {
+    public UserServiceImpl(UserRepo userRepo, UserRoleService userRoleService) {
         this.userRepo = userRepo;
+        this.userRoleService = userRoleService;
     }
 
     public UserDTO convertUserToDTO(User user) {
@@ -108,7 +110,10 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         newUser.setPhoneNumber(user.getPhoneNumber());
 
-        return userRepo.save(newUser);
+        User savedUser = userRepo.save(newUser);
+        userRoleService.createUserRole(savedUser);
+
+        return savedUser;
     }
 
     @Override
