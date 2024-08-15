@@ -55,17 +55,21 @@ public class AdminController {
                                                  @RequestParam(value = "price", required = false) BigDecimal price,
                                                  @RequestParam(value = "stockQuantity", required = false) Integer stockQuantity,
                                                  @RequestParam(value = "image", required = false) MultipartFile image) {
+        System.out.println("here");
         try {
             String imageName = null;
             if (image != null && !image.isEmpty()) {
+                System.out.println("1");
                 imageName = fileStorageService.saveFile(image);
             }
-
+            System.out.println("2");
             ProductDTO productDTO = new ProductDTO();
             productDTO.setProductName(productName);
             productDTO.setPrice(price);
             productDTO.setStockQuantity(stockQuantity);
             productDTO.setImage(imageName);
+
+            System.out.println(productDTO);
 
             Product updatedProduct = productService.updateProduct(productId, productDTO);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
