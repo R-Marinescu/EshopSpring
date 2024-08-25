@@ -31,6 +31,7 @@ public class AdminController {
     public ResponseEntity<Product> createProduct(@RequestParam("productName") String productName,
                                                  @RequestParam("price") BigDecimal price,
                                                  @RequestParam("stockQuantity") int stockQuantity,
+                                                 @RequestParam("category") String category,
                                                  @RequestParam("image") MultipartFile image) {
         try {
             String imageName = fileStorageService.saveFile(image);
@@ -39,6 +40,7 @@ public class AdminController {
             productDTO.setProductName(productName);
             productDTO.setPrice(price);
             productDTO.setStockQuantity(stockQuantity);
+            productDTO.setCategory(category);
             productDTO.setImage(imageName);
 
             Product createdProduct = productService.createProduct(productDTO);
@@ -54,6 +56,7 @@ public class AdminController {
                                                  @RequestParam(value = "productName", required = false) String productName,
                                                  @RequestParam(value = "price", required = false) BigDecimal price,
                                                  @RequestParam(value = "stockQuantity", required = false) Integer stockQuantity,
+                                                 @RequestParam(value = "category", required = false) String category,
                                                  @RequestParam(value = "image", required = false) MultipartFile image) {
         System.out.println("here");
         try {
@@ -67,6 +70,7 @@ public class AdminController {
             productDTO.setProductName(productName);
             productDTO.setPrice(price);
             productDTO.setStockQuantity(stockQuantity);
+            productDTO.setCategory(category);
             productDTO.setImage(imageName);
 
             System.out.println(productDTO);

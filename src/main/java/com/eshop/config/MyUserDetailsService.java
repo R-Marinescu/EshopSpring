@@ -41,12 +41,11 @@ public class MyUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-
-        // Use the PasswordEncoder to encode the password
+        
         String encodedPassword = passwordEncoder.encode(user.getPassword());
 
         List<Role> roles = roleRepo.findRolesByUserId(user.getUserId());
-       // System.out.println("edw??" + roles);
+
         return new MyUserPrincipal(user, roles);
     }
 }

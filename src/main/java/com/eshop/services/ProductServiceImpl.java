@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService{
         String imageUrl = baseUrl + "/images/" + new File(product.getImage()).getName();
         product.setImage(imageUrl);
 
-        return new ProductDTO(product.getId(), product.getProductName(), product.getPrice(), product.getStockQuantity(), product.getImage());
+        return new ProductDTO(product.getId(), product.getProductName(), product.getPrice(), product.getStockQuantity(), product.getCategory(), product.getImage());
     }
 
     public Product convertDTOToProduct(ProductDTO productDTO) {
@@ -39,6 +39,7 @@ public class ProductServiceImpl implements ProductService{
                 productDTO.getProductName(),
                 productDTO.getPrice(),
                 productDTO.getStockQuantity(),
+                productDTO.getCategory(),
                 productDTO.getImage());
     }
 
@@ -74,6 +75,7 @@ public class ProductServiceImpl implements ProductService{
         product.setProductName(productDTO.getProductName());
         product.setPrice(productDTO.getPrice());
         product.setStockQuantity(productDTO.getStockQuantity());
+        product.setCategory(productDTO.getCategory());
         product.setImage(productDTO.getImage());
 
         return productRepo.save(product);
@@ -96,6 +98,10 @@ public class ProductServiceImpl implements ProductService{
 
             if(productDTO.getStockQuantity() != null) {
                 existingProduct.setStockQuantity(productDTO.getStockQuantity());
+            }
+
+            if(productDTO.getCategory() != null) {
+                existingProduct.setCategory(productDTO.getCategory());
             }
 
             if(productDTO.getImage() != null) {

@@ -14,6 +14,8 @@ public class ProductDTO {
 
     private Integer stockQuantity;
 
+    private String category;
+
     private String image;
 
     @JsonCreator
@@ -22,11 +24,13 @@ public class ProductDTO {
             @JsonProperty("productName") String productName,
             @JsonProperty("price") BigDecimal price,
             @JsonProperty("stockQuantity") Integer stockQuantity,
+            @JsonProperty("category") String category,
             @JsonProperty("image") String image) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.stockQuantity = stockQuantity;
+        this.category = category;
         this.image = image;
     }
 
@@ -69,13 +73,21 @@ public class ProductDTO {
         this.image = image;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "ProductDTO{" +
-                "productId=" + productId +
-                ", productName='" + productName + '\'' +
+                "productName='" + productName + '\'' +
                 ", price=" + price +
                 ", stockQuantity=" + stockQuantity +
+                ", category='" + category + '\'' +
                 ", image='" + image + '\'' +
                 '}';
     }

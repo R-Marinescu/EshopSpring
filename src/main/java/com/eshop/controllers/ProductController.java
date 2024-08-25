@@ -40,6 +40,7 @@ public class ProductController {
     @GetMapping("/all")
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         List<ProductDTO> products = productService.getAllProducts();
+        System.out.println(products);
 
         if (!products.isEmpty()) {
             return new ResponseEntity<>(products, HttpStatus.OK);

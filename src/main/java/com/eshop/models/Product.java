@@ -21,17 +21,21 @@ public class Product {
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
+    @Column(name = "category", nullable = false)
+    private String category;
+
     @Column(name = "image", nullable = false)
     private String image;
 
     public Product() {
     }
 
-    public Product(Integer productId, String productName, BigDecimal price, Integer stockQuantity, String image) {
+    public Product(Integer productId, String productName, BigDecimal price, Integer stockQuantity, String category, String image) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.stockQuantity = stockQuantity;
+        this.category = category;
         this.image = image;
     }
 
@@ -71,13 +75,21 @@ public class Product {
         this.image = image;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
-                "productId=" + productId +
-                ", productName='" + productName + '\'' +
+                "productName='" + productName + '\'' +
                 ", price=" + price +
                 ", stockQuantity=" + stockQuantity +
+                ", category='" + category + '\'' +
                 ", image='" + image + '\'' +
                 '}';
     }
